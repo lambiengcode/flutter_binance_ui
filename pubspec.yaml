@@ -40,6 +40,7 @@ dependencies:
   photo_view: ^0.9.2
   cached_network_image: ^2.2.0+1
   carousel_slider: ^2.3.1
+  fl_chart:
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:binance/src/pages/options/widgets/drawer_layout.dart';
+import 'package:binance/src/pages/options/widgets/line_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -12,6 +14,7 @@ class OptionsPage extends StatefulWidget {
 class _OptionsPageState extends State<OptionsPage>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   String _action = 'Buy';
   double _valueCustom = 9.9902;
@@ -37,13 +40,20 @@ class _OptionsPageState extends State<OptionsPage>
   Widget build(BuildContext context) {
     final _size = MediaQuery.of(context).size;
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: Container(
+        width: _size.width * .7,
+        child: Drawer(
+          child: DrawerLayout(),
+        ),
+      ),
       appBar: AppBar(
         centerTitle: false,
         brightness: Brightness.dark,
         elevation: .0,
         backgroundColor: Color(0xFF1e1e1e).withOpacity(.98),
         leading: IconButton(
-          onPressed: () => null,
+          onPressed: () => _scaffoldKey.currentState.openDrawer(),
           icon: Icon(
             Feather.align_left,
             color: Colors.grey.shade100,
@@ -128,6 +138,7 @@ class _OptionsPageState extends State<OptionsPage>
               _buildValueOfTopBar(context),
               Container(
                 height: _size.height * .2,
+                child: LineChartSample2(),
               ),
               Container(
                 height: _size.height * .5,
