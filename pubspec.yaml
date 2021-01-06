@@ -41,12 +41,20 @@ dependencies:
   cached_network_image: ^2.2.0+1
   carousel_slider: ^2.3.1
   fl_chart:
+  http:
+  flutter_launcher_icons: ^0.8.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   integration_test:
     sdk: flutter
+
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "images/icon_app.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -58,6 +66,8 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - images/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

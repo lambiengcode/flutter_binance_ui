@@ -1,9 +1,12 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:ui';
 import 'package:binance/src/models/change.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
   @override
@@ -12,6 +15,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   ScrollController _controller = new ScrollController();
+  StreamController _postsController;
   String _option = 'Change';
   bool _showAppBar = true;
 
@@ -52,8 +56,28 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Future fetchPost() async {
+    final response = await http.get(
+        'http://api.coinlayer.com/api/live?access_key=10cd923a6e7417be389ea94c105110d3');
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to load post');
+    }
+  }
+
+  loadPosts() async {
+    fetchPost().then((res) async {
+      _postsController.add(res);
+      return res;
+    });
+  }
+
   @override
   void initState() {
+    _postsController = new StreamController();
+    loadPosts();
     super.initState();
   }
 
@@ -196,33 +220,44 @@ class _HomePageState extends State<HomePage> {
                                 SizedBox(
                                   height: 20.0,
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 16.0),
-                                  child: Row(
-                                    children: [
-                                      _buildNoticeCoins(
-                                        context,
-                                        'BTCUSDT',
-                                        '+4.56%',
-                                        33955.13,
-                                        Color(0xFF00FF80),
+                                StreamBuilder(
+                                  stream: _postsController.stream,
+                                  builder: (context, AsyncSnapshot snapshot) {
+                                    if (!snapshot.hasData) {
+                                      return Container();
+                                    }
+
+                                    print(snapshot.data);
+
+                                    return Padding(
+                                      padding: EdgeInsets.only(left: 16.0),
+                                      child: Row(
+                                        children: [
+                                          _buildNoticeCoins(
+                                            context,
+                                            'BTCUSDT',
+                                            '+4.56%',
+                                            33955.13,
+                                            Color(0xFF00FF80),
+                                          ),
+                                          _buildNoticeCoins(
+                                            context,
+                                            'ETHUSDT',
+                                            '+ 4.56%',
+                                            12955.13,
+                                            Color(0xFFFFF3232),
+                                          ),
+                                          _buildNoticeCoins(
+                                            context,
+                                            'EOSUSDT',
+                                            '+4.56%',
+                                            22955.13,
+                                            Color(0xFF00FF80),
+                                          ),
+                                        ],
                                       ),
-                                      _buildNoticeCoins(
-                                        context,
-                                        'ETHUSDT',
-                                        '+ 4.56%',
-                                        12955.13,
-                                        Color(0xFFFFF3232),
-                                      ),
-                                      _buildNoticeCoins(
-                                        context,
-                                        'EOSUSDT',
-                                        '+4.56%',
-                                        22955.13,
-                                        Color(0xFF00FF80),
-                                      ),
-                                    ],
-                                  ),
+                                    );
+                                  },
                                 ),
                                 SizedBox(
                                   height: 18.0,

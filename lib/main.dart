@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 void main() {
   runApp(
     GetMaterialApp(
-      title: 'Now',
+      title: 'Binance JEX',
       debugShowCheckedModeBanner: false,
       initialRoute: '/root',
       defaultTransition: Transition.native,

@@ -1,8 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.binance">
+    <uses-permission android:name="android.permission.INTERNET" />
    <application
-        android:label="binance"
-        android:icon="@mipmap/ic_launcher">
+        android:label="Binance JEX"
+        android:icon="@mipmap/launcher_icon"
+        android:usesCleartextTraffic="true" targetApi="30">
+        
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
