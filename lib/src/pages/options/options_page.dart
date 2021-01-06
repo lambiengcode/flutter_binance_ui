@@ -130,6 +130,7 @@ class _OptionsPageState extends State<OptionsPage>
         color: Color(0xFF141414),
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
                 height: 4.0,
@@ -141,16 +142,84 @@ class _OptionsPageState extends State<OptionsPage>
                 child: LineChartSample2(),
               ),
               Container(
-                height: _size.height * .5,
                 padding: EdgeInsets.only(
                   left: 12.0,
                   right: 6.0,
+                  bottom: 24.0,
+                  top: 12.0,
                 ),
                 child: Row(
                   children: [
                     _buildLeftColumn(context),
                     SizedBox(width: 16.0),
                     _buildRightColumn(context),
+                  ],
+                ),
+              ),
+
+              Container(
+                height: 10.0,
+                color: Color(0xFF1e1e1e),
+              ),
+
+              // Build Active Orders
+              Container(
+                height: _size.height * .4,
+                width: _size.width,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 8.0,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 14.0, vertical: 16.0),
+                      child: Text(
+                        'Active Orders',
+                        style: TextStyle(
+                          fontSize: _size.width / 20.0,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      color: Colors.grey.shade700,
+                      thickness: .35,
+                      height: .35,
+                    ),
+                    Expanded(
+                      child: Container(
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Feather.file,
+                                color: Colors.grey.shade400,
+                                size: _size.width / 16.8,
+                              ),
+                              SizedBox(
+                                width: 8.0,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 4.0),
+                                child: Text(
+                                  'No order',
+                                  style: TextStyle(
+                                    color: Colors.grey.shade200,
+                                    fontSize: _size.width / 20.5,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
