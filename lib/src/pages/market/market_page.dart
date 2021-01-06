@@ -1,5 +1,7 @@
+import 'package:binance/src/pages/market/pages/favourite_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MarketPage extends StatefulWidget {
   @override
@@ -9,6 +11,14 @@ class MarketPage extends StatefulWidget {
 class _MarketPageState extends State<MarketPage>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
+
+  var _pages = [
+    FavouritePage(),
+    FavouritePage(),
+    FavouritePage(),
+    FavouritePage(),
+    FavouritePage(),
+  ];
 
   @override
   void initState() {
@@ -57,14 +67,14 @@ class _MarketPageState extends State<MarketPage>
           indicatorColor: Color(0xFFFFD500),
           unselectedLabelColor: Colors.grey,
           indicatorSize: TabBarIndicatorSize.tab,
-          indicatorWeight: 2.0,
+          indicatorWeight: 1.75,
           indicatorPadding: EdgeInsets.symmetric(horizontal: 28.0),
           labelStyle: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: _size.width / 26.0,
+            fontWeight: FontWeight.w500,
+            fontSize: _size.width / 28.0,
           ),
           unselectedLabelStyle: TextStyle(
-            fontWeight: FontWeight.w400,
+            fontWeight: FontWeight.w500,
             fontSize: _size.width / 28.0,
           ),
           tabs: [
@@ -102,7 +112,92 @@ class _MarketPageState extends State<MarketPage>
         ),
       ),
       body: Container(
-        color: Color(0xFF000000),
+        color: Color(0xFF141414),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 2.5,
+            ),
+            _buildTopBar(context),
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: _pages.map((Widget tab) {
+                  return tab;
+                }).toList(),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTopBar(context) {
+    final _size = MediaQuery.of(context).size;
+    return Container(
+      padding: EdgeInsets.fromLTRB(6.0, 8.0, 6.0, 8.0),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(
+              'Pairs',
+              style: TextStyle(
+                fontSize: _size.width / 26.0,
+                color: Colors.grey.shade400,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Last Price',
+                  style: TextStyle(
+                    fontSize: _size.width / 30.0,
+                    color: Colors.grey.shade400,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                SizedBox(
+                  width: 4.0,
+                ),
+                Icon(
+                  FontAwesomeIcons.sort,
+                  color: Colors.grey.shade400,
+                  size: _size.width / 26.0,
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  'Change',
+                  style: TextStyle(
+                    fontSize: _size.width / 30.0,
+                    color: Colors.grey.shade400,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                SizedBox(
+                  width: 4.0,
+                ),
+                Icon(
+                  FontAwesomeIcons.sort,
+                  color: Colors.grey.shade400,
+                  size: _size.width / 26.0,
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

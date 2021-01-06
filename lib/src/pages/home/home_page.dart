@@ -389,7 +389,7 @@ class _HomePageState extends State<HomePage> {
             height: 2.5,
           ),
           Text(
-            '~ \$${value.round()}',
+            '≈ \$${value.round()}',
             style: TextStyle(
               color: color,
               fontSize: _size.width / 24.0,

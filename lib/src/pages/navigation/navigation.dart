@@ -1,8 +1,8 @@
 import 'package:binance/src/pages/home/home_page.dart';
 import 'package:binance/src/pages/market/market_page.dart';
+import 'package:binance/src/pages/options/options_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Navigation extends StatefulWidget {
   @override
@@ -14,9 +14,9 @@ class _NavigationState extends State<Navigation> {
   var _pages = [
     HomePage(),
     MarketPage(),
-    Container(),
-    Container(),
-    Container(),
+    OptionsPage(),
+    OptionsPage(),
+    OptionsPage(),
   ];
 
   @override
@@ -50,7 +50,7 @@ class _NavigationState extends State<Navigation> {
             BottomNavigationBarItem(
                 icon: Icon(Feather.trending_up), title: Text("Trend")),
             BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.trello), title: Text("Coins")),
+                icon: Icon(Feather.activity), title: Text("Coins")),
           ],
         ),
         body: _pages[currentPage],
