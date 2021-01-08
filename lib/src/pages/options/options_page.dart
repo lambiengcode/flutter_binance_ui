@@ -1,10 +1,12 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:ui';
-
 import 'package:binance/src/pages/options/widgets/drawer_layout.dart';
-import 'package:binance/src/pages/options/widgets/line_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_candlesticks/flutter_candlesticks.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:http/http.dart' as http;
 
 class OptionsPage extends StatefulWidget {
   @override
@@ -15,9 +17,69 @@ class _OptionsPageState extends State<OptionsPage>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  StreamController _postsController;
+  Timer timer;
+  String _api =
+      'https://min-api.cryptocompare.com/data/generateAvg?fsym=BTC&tsym=USD&e=Kraken&api_key=5b5a7685ff31b6033f79ffc43c778605d47ca3a84a7d690ec510149ccb0e7f50';
 
   String _action = 'Buy';
   double _valueCustom = 9.9902;
+
+  List sampleData = List.generate(
+    10,
+    (int index) => {
+      "open": 100.0,
+      "high": 500.0,
+      "low": 50.0,
+      "close": 100,
+      "volumeto": 5000.0,
+    },
+  );
+
+  Future fetchPost() async {
+    final response = await http.get(_api);
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to load post');
+    }
+  }
+
+  loadPosts() async {
+    fetchPost().then((res) async {
+      _postsController.add(res);
+      return res;
+    });
+  }
+
+  Future<Null> _handleRefresh() async {
+    fetchPost().then((res) async {
+      _postsController.add(res);
+      setState(() {
+        sampleData.add(
+          {
+            "open": double.parse(res['RAW']['PRICE'].toString()),
+            "high": double.parse(res['RAW']['PRICE'].toString()),
+            "low": double.parse(res['RAW']['PRICE'].toString()),
+            "close": double.parse(res['RAW']['PRICE'].toString()),
+            "volumeto": double.parse(res['RAW']['PRICE'].toString()),
+          },
+        );
+        sampleData.removeAt(0);
+        print(sampleData);
+      });
+      return null;
+    });
+  }
+
+  startTimer() {
+    timer = Timer.periodic(Duration(milliseconds: 200), (t) {
+      setState(() {
+        _handleRefresh();
+      });
+    });
+  }
 
   var _pages = [
     Container(),
@@ -28,12 +90,21 @@ class _OptionsPageState extends State<OptionsPage>
 
   @override
   void initState() {
+    _postsController = new StreamController();
+    loadPosts();
+    startTimer();
     super.initState();
     _tabController = new TabController(
       vsync: this,
       length: 4,
       initialIndex: 0,
     );
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
   }
 
   @override
@@ -139,7 +210,16 @@ class _OptionsPageState extends State<OptionsPage>
               _buildValueOfTopBar(context),
               Container(
                 height: _size.height * .2,
-                child: LineChartSample2(),
+                margin: EdgeInsets.symmetric(vertical: 12.0),
+                padding: EdgeInsets.symmetric(horizontal: 20.0),
+                child: OHLCVGraph(
+                  data: sampleData,
+                  enableGridLines: true,
+                  volumeProp: .001,
+                  fallbackHeight: 200.0,
+                  gridLineAmount: 6,
+                  lineWidth: .8,
+                ),
               ),
               Container(
                 padding: EdgeInsets.only(

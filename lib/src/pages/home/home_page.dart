@@ -16,6 +16,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   ScrollController _controller = new ScrollController();
   StreamController _postsController;
+  Timer timer;
+  String _api =
+      'https://min-api.cryptocompare.com/data/generateAvg?fsym=BTC&tsym=USD&e=Kraken&api_key=5b5a7685ff31b6033f79ffc43c778605d47ca3a84a7d690ec510149ccb0e7f50';
   String _option = 'Change';
   bool _showAppBar = true;
 
@@ -57,8 +60,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future fetchPost() async {
-    final response = await http.get(
-        'http://api.coinlayer.com/api/live?access_key=10cd923a6e7417be389ea94c105110d3');
+    final response = await http.get(_api);
 
     if (response.statusCode == 200) {
       return json.decode(response.body);
@@ -70,7 +72,25 @@ class _HomePageState extends State<HomePage> {
   loadPosts() async {
     fetchPost().then((res) async {
       _postsController.add(res);
+      print(res['RAW']['PRICE']);
+      print('I\'m here');
       return res;
+    });
+  }
+
+  Future<Null> _handleRefresh() async {
+    fetchPost().then((res) async {
+      _postsController.add(res);
+
+      return null;
+    });
+  }
+
+  startTimer() {
+    timer = Timer.periodic(Duration(milliseconds: 200), (t) {
+      setState(() {
+        _handleRefresh();
+      });
     });
   }
 
@@ -78,7 +98,14 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     _postsController = new StreamController();
     loadPosts();
+    startTimer();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    timer.cancel();
   }
 
   @override
@@ -224,10 +251,35 @@ class _HomePageState extends State<HomePage> {
                                   stream: _postsController.stream,
                                   builder: (context, AsyncSnapshot snapshot) {
                                     if (!snapshot.hasData) {
-                                      return Container();
+                                      return Padding(
+                                        padding: EdgeInsets.only(left: 16.0),
+                                        child: Row(
+                                          children: [
+                                            _buildNoticeCoins(
+                                              context,
+                                              'BTCUSDT',
+                                              '+4.56%',
+                                              34.3017,
+                                              Color(0xFF00FF80),
+                                            ),
+                                            _buildNoticeCoins(
+                                              context,
+                                              'ETHUSDT',
+                                              '+ 4.56%',
+                                              1107.2242,
+                                              Color(0xFFFFF3232),
+                                            ),
+                                            _buildNoticeCoins(
+                                              context,
+                                              'EOSUSDT',
+                                              '+4.56%',
+                                              3.0216,
+                                              Color(0xFF00FF80),
+                                            ),
+                                          ],
+                                        ),
+                                      );
                                     }
-
-                                    print(snapshot.data);
 
                                     return Padding(
                                       padding: EdgeInsets.only(left: 16.0),
@@ -237,21 +289,27 @@ class _HomePageState extends State<HomePage> {
                                             context,
                                             'BTCUSDT',
                                             '+4.56%',
-                                            33955.13,
+                                            double.parse(snapshot.data['RAW']
+                                                    ['PRICE']
+                                                .toString()),
                                             Color(0xFF00FF80),
                                           ),
                                           _buildNoticeCoins(
                                             context,
                                             'ETHUSDT',
                                             '+ 4.56%',
-                                            12955.13,
+                                            double.parse(snapshot.data['RAW']
+                                                    ['PRICE']
+                                                .toString()),
                                             Color(0xFFFFF3232),
                                           ),
                                           _buildNoticeCoins(
                                             context,
                                             'EOSUSDT',
                                             '+4.56%',
-                                            22955.13,
+                                            double.parse(snapshot.data['RAW']
+                                                    ['PRICE']
+                                                .toString()),
                                             Color(0xFF00FF80),
                                           ),
                                         ],
@@ -413,7 +471,7 @@ class _HomePageState extends State<HomePage> {
             height: 2.5,
           ),
           Text(
-            value.toString(),
+            '$value',
             style: TextStyle(
               color: color,
               fontSize: _size.width / 22.0,
