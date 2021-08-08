@@ -17,8 +17,7 @@ class _HomePageState extends State<HomePage> {
   ScrollController _controller = new ScrollController();
   StreamController _postsController;
   Timer timer;
-  String _api =
-      'https://min-api.cryptocompare.com/data/generateAvg?fsym=BTC&tsym=USD&e=Kraken&api_key=5b5a7685ff31b6033f79ffc43c778605d47ca3a84a7d690ec510149ccb0e7f50';
+  String _api = ''; // Find a API can get Binance Data
   String _option = 'Change';
   bool _showAppBar = true;
 
