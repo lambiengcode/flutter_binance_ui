@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:ui';
 import 'package:binance/src/pages/options/widgets/drawer_layout.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_candlesticks/flutter_candlesticks.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -37,7 +36,7 @@ class _OptionsPageState extends State<OptionsPage>
   );
 
   Future fetchPost() async {
-    final response = await http.get(_api);
+    final response = await http.get(Uri.parse(_api));
 
     if (response.statusCode == 200) {
       return json.decode(response.body);
@@ -208,19 +207,19 @@ class _OptionsPageState extends State<OptionsPage>
               ),
               _buildTopBar(context),
               _buildValueOfTopBar(context),
-              Container(
-                height: _size.height * .2,
-                margin: EdgeInsets.symmetric(vertical: 12.0),
-                padding: EdgeInsets.symmetric(horizontal: 20.0),
-                child: OHLCVGraph(
-                  data: sampleData,
-                  enableGridLines: true,
-                  volumeProp: .001,
-                  fallbackHeight: 200.0,
-                  gridLineAmount: 6,
-                  lineWidth: .8,
-                ),
-              ),
+              // Container(
+              //   height: _size.height * .2,
+              //   margin: EdgeInsets.symmetric(vertical: 12.0),
+              //   padding: EdgeInsets.symmetric(horizontal: 20.0),
+              //   child: OHLCVGraph(
+              //     data: sampleData,
+              //     enableGridLines: true,
+              //     volumeProp: .001,
+              //     fallbackHeight: 200.0,
+              //     gridLineAmount: 6,
+              //     lineWidth: .8,
+              //   ),
+              // ),
               Container(
                 padding: EdgeInsets.only(
                   left: 12.0,

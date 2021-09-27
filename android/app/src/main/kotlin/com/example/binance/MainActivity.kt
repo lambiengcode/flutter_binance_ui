@@ -1,4 +1,4 @@
-package com.example.binance
+package com.wanted.binance
 
 import io.flutter.embedding.android.FlutterActivity
 

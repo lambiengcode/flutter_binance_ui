@@ -59,7 +59,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future fetchPost() async {
-    final response = await http.get(_api);
+    final response = await http.get(Uri.parse(_api));
 
     if (response.statusCode == 200) {
       return json.decode(response.body);
